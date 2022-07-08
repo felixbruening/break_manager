@@ -1,0 +1,186 @@
+#!/bin/bash -e
+######################################################################
+# 
+#          Custom i3bar script by Felix Brüning, 2022
+#
+# This program is free software: you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License as 
+# published by the Free Software Foundation, either version 3 of 
+# the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+#  along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
+######################################################################
+
+set -e
+
+# --------------------------------------------------------------------
+# Break Manager
+# --------------------------------------------------------------------
+
+start_time=-1
+current_time=0
+
+break_manager() {
+    
+    if [[ -f "/tmp/BREAK_MANAGER_START_50" || -f "/tmp/BREAK_MANAGER_START_45" ]]
+    then
+        if [  -f "/tmp/BREAK_MANAGER_START_50" ]
+        then
+            
+            if [ -f "/tmp/BREAK_MANAGER_START_50_WORK" ]
+            then
+
+                if [ -s "/tmp/BREAK_MANAGER_START_50" ]
+                then
+                    start_time=`cat "/tmp/BREAK_MANAGER_START_50"`
+                else
+                    echo $(date "+%H%M") > "/tmp/BREAK_MANAGER_START_50"
+                fi
+
+                current_time=$(date "+%H%M")
+                time_diff="$((current_time - start_time))"
+
+                if [ $time_diff -eq 50 ]
+                then
+                    rm -rf "/tmp/BREAK_MANAGER_START_50"
+                    touch "/tmp/BREAK_MANAGER_START_50"
+
+                    rm -rf "/tmp/BREAK_MANAGER_START_50_WORK"
+                else
+                    time_left="$((50 - time_diff))"
+                    echo "$time_left minutes left to Work" 
+                fi
+            else
+                if [ -s "/tmp/BREAK_MANAGER_START_50" ]
+                then
+                    start_time=`cat "/tmp/BREAK_MANAGER_START_50"`
+                else
+                    echo $(date "+%H%M") > "/tmp/BREAK_MANAGER_START_50"
+                fi
+
+                current_time=$(date "+%H%M")
+                time_diff="$((current_time - start_time))"
+
+                if [ $time_diff -eq 10 ]
+                then
+                    rm -rf "/tmp/BREAK_MANAGER_START_50"
+                    touch "/tmp/BREAK_MANAGER_START_50"
+
+                    touch "/tmp/BREAK_MANAGER_START_50_WORK"
+                else
+                    time_left="$((10 - time_diff))"
+                    echo "$time_left minutes left for pause" 
+                fi
+            fi
+            
+            
+        fi
+
+        if [ -f "/tmp/BREAK_MANAGER_START_45" ]
+        then
+            if [ -f "/tmp/BREAK_MANAGER_START_45_WORK" ]
+            then
+
+                if [ -s "/tmp/BREAK_MANAGER_START_45" ]
+                then
+                    start_time=`cat "/tmp/BREAK_MANAGER_START_45"`
+                else
+                    echo $(date "+%H%M") > "/tmp/BREAK_MANAGER_START_45"
+                fi
+
+                current_time=$(date "+%H%M")
+                time_diff="$((current_time - start_time))"
+
+                if [ $time_diff -eq 45 ]
+                then
+                    rm -rf "/tmp/BREAK_MANAGER_START_45"
+                    touch "/tmp/BREAK_MANAGER_START_45"
+
+                    rm -rf "/tmp/BREAK_MANAGER_START_45_WORK"
+                else
+                    time_left="$((45 - time_diff))"
+                    echo "$time_left minutes left to Work" 
+                fi
+            else
+                if [ -s "/tmp/BREAK_MANAGER_START_45" ]
+                then
+                    start_time=`cat "/tmp/BREAK_MANAGER_START_45"`
+                else
+                    echo $(date "+%H%M") > "/tmp/BREAK_MANAGER_START_45"
+                fi
+
+                current_time=$(date "+%H%M")
+                time_diff="$((current_time - start_time))"
+
+                if [ $time_diff -eq 15 ]
+                then
+                    rm -rf "/tmp/BREAK_MANAGER_START_45"
+                    touch "/tmp/BREAK_MANAGER_START_45"
+
+                    touch "/tmp/BREAK_MANAGER_START_45_WORK"
+                else
+                    time_left="$((15 - time_diff))"
+                    echo "$time_left minutes left for pause" 
+                fi
+            fi
+        fi
+        
+    else
+        echo "Not Started."
+    fi
+    
+}
+
+
+# --------------------------------------------------------------------
+# Field definitions
+# --------------------------------------------------------------------
+break_manager_field() {
+    status=$(break_manager)
+    
+    state_not_started="Not Started."
+
+    if [ "$status" == "$state_not_started" ]
+    then
+        echo "{\"full_text\":\"BM: $status\", \"color\":\"#FFFF99\" }"
+    else
+        echo "{\"full_text\":\"BM: $status\", \"color\":\"#99FF99\" }"
+    fi
+    
+}
+
+# --------------------------------------------------------------------
+
+# Add one json field:
+# {\"full_text\":\"${<my_variable>}\" }
+
+# --------------------------------------------------------------------
+# Print i3bar command
+# --------------------------------------------------------------------
+# Explaination:
+# ===============
+#
+# The 4 lines of json file has to be read from i3status.conf file, parsed
+# and exported by `i3status` to json config for i3bar
+# echo new JSON fields for custom data
+
+i3status | (read line && echo "$line" && read line && echo "$line" && read line && echo "$line" && update_rate && while :
+do
+  read line
+  update_rate
+  echo ", [$(break_manager_field), ${line#,\[}" || exit 1
+done)
+
+# --------------------------------------------------------------------
+
+
+
+
+

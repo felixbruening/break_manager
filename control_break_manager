@@ -1,0 +1,64 @@
+#!/bin/bash
+######################################################################
+# 
+#          Control Break Manager script by Felix Brüning
+# 
+# This program is free software: you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License as 
+# published by the Free Software Foundation, either version 3 of 
+# the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+#  along with this program. If not, see <https://www.gnu.org/licenses/>.
+#
+######################################################################
+
+if [ "$1" == -start ]
+then
+    if [ "$2" == 45 ]
+    then
+        echo "Starting timer 45 minutes"
+        touch "/tmp/BREAK_MANAGER_START_45"
+        touch "/tmp/BREAK_MANAGER_START_45_WORK"
+    fi
+
+    if [ "$2" == 50 ]
+    then
+        echo "Starting timer 50 minutes"
+        touch "/tmp/BREAK_MANAGER_START_50"
+        touch "/tmp/BREAK_MANAGER_START_50_WORK"
+    fi
+    
+fi
+
+if [ "$1" == -stop ]
+then
+    echo "Stop timer"
+
+    if [ -f "/tmp/BREAK_MANAGER_START_50" ]
+    then
+        rm -rf "/tmp/BREAK_MANAGER_START_50"
+    fi
+
+    if [ -f "/tmp/BREAK_MANAGER_START_45" ]
+    then
+        rm -rf "/tmp/BREAK_MANAGER_START_45"
+    fi
+    
+    if [ -f "/tmp/BREAK_MANAGER_START_50_WORK" ]
+    then
+        rm -rf "/tmp/BREAK_MANAGER_START_50_WORK"
+    fi
+
+    if [ -f "/tmp/BREAK_MANAGER_START_45_WORK" ]
+    then
+        rm -rf "/tmp/BREAK_MANAGER_START_45_WORK"
+    fi
+fi
+
+
