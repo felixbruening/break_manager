@@ -38,7 +38,7 @@ bar {
 
 Additionally, you can add a interactive window for ```control_break_manager``` in which you add following lines to i3config:
 ```
-bindsym $mod+Shift+t exec "i3-nagbar -t warning -m 'Break-Time-Manager, Choose an option' -B 'Start timer [w: 50]' 'control_brake_manager -start 50' -B 'Start timer [w: 45]' 'control_brake_manager -start 45' -B 'Stop Timer' 'control_brake_manager -stop'"
+bindsym $mod+Shift+t exec "i3-nagbar -t warning -m 'Break-Time-Manager, Choose an option' -B 'Start timer [w: 50]' 'control_break_manager -start 50' -B 'Start timer [w: 45]' 'control_break_manager -start 45' -B 'Stop Timer' 'control_break_manager -stop'"
 ```
 
 
