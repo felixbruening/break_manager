@@ -18,47 +18,82 @@
 #
 ######################################################################
 
-if [ "$1" == -start ]
+
+source break_manager
+
+# ------------------------------------
+# handle arguments function
+# ------------------------------------
+function handleArguments() {
+    command=$1
+    time_value=$2
+
+    # -----------------------
+    # if command is '-start'
+    # -----------------------
+    if [ "$command" == -start ]
+    then
+        if [ "$time_value" == 45 ]
+        then
+            echo "Starting timer 45 minutes"
+            touch $BM_45_FILE
+            touch $BM_45_WORK_FILE
+        fi
+
+        if [ "$time_value" == 50 ]
+        then
+            echo "Starting timer 50 minutes"
+            touch $BM_50_FILE
+            touch $BM_50_WORK_FILE
+        fi
+        
+    fi
+
+    # -----------------------
+    # if command is '-stop'
+    # -----------------------
+    if [ "$command" == -stop ]
+    then
+        echo "Stop timer"
+
+        if [ -f $BM_50_FILE ]
+        then
+            rm -rf $BM_50_FILE
+        fi
+
+        if [ -f $BM_45_FILE ]
+        then
+            rm -rf $BM_45_FILE
+        fi
+        
+        if [ -f $BM_50_WORK_FILE ]
+        then
+            rm -rf $BM_50_WORK_FILE
+        fi
+
+        if [ -f $BM_45_WORK_FILE ]
+        then
+            rm -rf $BM_45_WORK_FILE
+        fi
+    fi
+}
+
+# ------------------------------------
+# print usage
+# ------------------------------------
+function printUsage() {
+    echo "Usage: "
+    echo "-start <time>  | time: 45 or 50 [minutes]"
+    echo "-stop"
+}
+
+# ------------------------------------
+# Main
+# ------------------------------------
+if [ $# -eq 0 ]
 then
-    if [ "$2" == 45 ]
-    then
-        echo "Starting timer 45 minutes"
-        touch "/tmp/BREAK_MANAGER_START_45"
-        touch "/tmp/BREAK_MANAGER_START_45_WORK"
-    fi
-
-    if [ "$2" == 50 ]
-    then
-        echo "Starting timer 50 minutes"
-        touch "/tmp/BREAK_MANAGER_START_50"
-        touch "/tmp/BREAK_MANAGER_START_50_WORK"
-    fi
-    
+    printUsage
+else
+    handleArguments $1 $2
 fi
-
-if [ "$1" == -stop ]
-then
-    echo "Stop timer"
-
-    if [ -f "/tmp/BREAK_MANAGER_START_50" ]
-    then
-        rm -rf "/tmp/BREAK_MANAGER_START_50"
-    fi
-
-    if [ -f "/tmp/BREAK_MANAGER_START_45" ]
-    then
-        rm -rf "/tmp/BREAK_MANAGER_START_45"
-    fi
-    
-    if [ -f "/tmp/BREAK_MANAGER_START_50_WORK" ]
-    then
-        rm -rf "/tmp/BREAK_MANAGER_START_50_WORK"
-    fi
-
-    if [ -f "/tmp/BREAK_MANAGER_START_45_WORK" ]
-    then
-        rm -rf "/tmp/BREAK_MANAGER_START_45_WORK"
-    fi
-fi
-
 

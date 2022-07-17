@@ -6,7 +6,10 @@ To avoid becoming a workaholic, it is useful to work hard for a certain amount o
 The first version can be run in the shell, the other can be perfectly combined with 'i3bar' and 'i3status' of the i3 window manager.
 
 ## Installation
-For installation, execute ```make``` in project directory. This will install ```control_break_manager```, ```break_manager``` and ```break_manager_int``` to ```/usr/local/bin/```
+For installation, execute ```make``` in project directory. This will install ```control_break_manager```, ```break_manager```, ```break_manager_i3``` and ```break_manager_int``` to ```/usr/local/bin/```
+
+## Structure
+the file ```break_manager``` stores the relevant algorithms, it is the main module. File ```break_manager_int``` is the shell-version to output all infos to shell. ```break_manager_i3``` is the shell script for i3status for the i3 window manager. ```control_break_manager``` is for starting and stopping the break manager.
 
 ## Usage
 Following command sets timer configuration. This command sets the current date for start date. 
@@ -29,7 +32,7 @@ Add following to your i3wm-config file in ```~/.config/i3/config```:
 ```
 bar {
     position top
-    status_command exec </path/to>/break_manager
+    status_command exec </path/to>/break_manager_i3
 }
 ```
 
@@ -37,5 +40,6 @@ Additionally, you can add a interactive window for ```control_break_manager``` i
 ```
 bindsym $mod+Shift+t exec "i3-nagbar -t warning -m 'Break-Time-Manager, Choose an option' -B 'Start timer [w: 50]' 'control_brake_manager -start 50' -B 'Start timer [w: 45]' 'control_brake_manager -start 45' -B 'Stop Timer' 'control_brake_manager -stop'"
 ```
+
 
 
